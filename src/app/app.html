@@ -7,7 +7,7 @@
 
 <div class="products">
 
-  @for (product of products; track product;
+  @for (product of (products$ | async); track product;
     let index = $index;
     let last = $last;
     let even = $even;

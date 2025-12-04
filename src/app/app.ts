@@ -10,14 +10,15 @@ import axios from 'axios';
 
 import { Product } from './model/product';
 import { ProductCardComponent } from './product-card/product-card';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 const PRODUCT_URL: string = 'https://dummyjson.com/products';
 
 @Component({
   selector: 'app-root',
-  imports: [ProductCardComponent],
+  imports: [ProductCardComponent, AsyncPipe, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   standalone: true
@@ -25,14 +26,15 @@ const PRODUCT_URL: string = 'https://dummyjson.com/products';
 export class AppComponent implements OnInit {
 
     protected readonly title = signal('myapp');
-    
-    products: Product[] = [];
+
+    products$ : Observable<Product[]> = new Observable<Product[]>; // = this.getProducts();
+    // products: Product[] = [];
 
     constructor( private http: HttpClient ) {
       // this.products = this.products;
     }
 
-    getProduct(): Observable<Product[]> {
+    getProducts(): Observable<Product[]> {
       return this.http.get<Product[]>(`${PRODUCT_URL}`);
     }
     //fetch('https://dummyjson.com/products')
@@ -40,27 +42,48 @@ export class AppComponent implements OnInit {
         // .then(console.log);
 
     ngOnInit() {
+
+      const params= new HttpParams()
+        .set("limit", "0")
+        .set("skip", "0");
       // fetch('https://dummyjson.com/products')
       //   .then(res => res.json())
       //   .then(console.log);
-        
-       this.http.get(`${PRODUCT_URL}`)        
-          .subscribe(
 
-            (products: Product[]) => {
-              this.products = products;
-            },
-            (error) => {
-              console.error('Error fetching products:', error);
-            }
-            //   (response: any) => {
-            //     this.products = response.products
-            //     //console.log(response);
-            // },
-            // (error: any) => {
-            //   console.error('Error fetching data:', error);
-            // }
-          );
+      //        someObservable<Product[]>().subscribe((products: Product[]) => {
+
+//observable.subscribe({
+//   next: value => console.log(value),
+//   error: error => console.error(error),
+//   complete: () => console.log('Complete')
+// });
+
+      // this.getProducts().subscribe({
+      //   //next: this.products => products,
+      //   next: products => console.log(products),
+      //   error: error => console.error('Error fetching products:', error),
+      //   complete: () => console.log('Complete')
+      // });
+
+
+      this.products$ = this.http.get<Product[]>(`${PRODUCT_URL}`, {params}); 
+          
+      // .subscribe(
+
+      //       // (products: Product[]) => {
+      //       //   this.products = products;
+      //       // },
+      //       // (error) => {
+      //       //   console.error('Error fetching products:', error);
+      //       // }
+      //         (response: any) => {
+      //           this.products = response.products
+      //           //console.log(response);
+      //       },
+      //       (error: any) => {
+      //         console.error('Error fetching data:', error);
+      //       }
+      //     );
     
     };
     
