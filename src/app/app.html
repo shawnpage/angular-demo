@@ -1,0 +1,30 @@
+<div class="top-menu">
+
+    <img class="logo" alt="logo"
+         src="https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png">
+
+</div>
+
+<div class="products">
+
+  @for (product of products; track product;
+    let index = $index;
+    let last = $last;
+    let even = $even;
+    ) {
+
+    <product-card
+      [product]="product"
+      [index]="index"
+      [class.is-first] = $first
+      [class.is-last] = last
+      [class.is-even] = "even"
+      [class.is-odd] = $odd/>
+  }
+  @empty {
+    <h1>No products found!</h1>
+  }
+
+</div>
+<!-- (productSelected)="onProductSelected($event)"-->
+
