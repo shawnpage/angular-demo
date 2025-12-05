@@ -12,6 +12,7 @@ import { Product } from './model/product';
 import { ProductCardComponent } from './product-card/product-card';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AsyncPipe, CommonModule } from '@angular/common';
 
 const PRODUCT_URL: string = 'https://dummyjson.com/products';
@@ -28,14 +29,17 @@ export class AppComponent implements OnInit {
     protected readonly title = signal('myapp');
 
     products$ : Observable<Product[]> = new Observable<Product[]>; // = this.getProducts();
-    // products: Product[] = [];
+
+    products: Product[] = [];
 
     constructor( private http: HttpClient ) {
       // this.products = this.products;
     }
 
     getProducts(): Observable<Product[]> {
-      return this.http.get<Product[]>(`${PRODUCT_URL}`);
+      return this.http.get<{ products: Product[] }>(PRODUCT_URL).pipe(
+        map(response => response.products) // Assuming your JSON has a 'products' key containing the array
+      );
     }
     //fetch('https://dummyjson.com/products')
         // .then(res => res.json())
@@ -66,24 +70,27 @@ export class AppComponent implements OnInit {
       // });
 
 
-      this.products$ = this.http.get<Product[]>(`${PRODUCT_URL}`, {params}); 
-          
-      // .subscribe(
+      // this.products = 
+      this.products$ = this.getProducts();
 
-      //       // (products: Product[]) => {
-      //       //   this.products = products;
-      //       // },
-      //       // (error) => {
-      //       //   console.error('Error fetching products:', error);
-      //       // }
-      //         (response: any) => {
-      //           this.products = response.products
-      //           //console.log(response);
-      //       },
-      //       (error: any) => {
-      //         console.error('Error fetching data:', error);
-      //       }
-      //     );
+
+      //this.http.get<Product[]>(`${PRODUCT_URL}`, {params});
+        // .subscribe(
+
+        //     // (products: Product[]) => {
+        //     //   this.products = products;
+        //     // },
+        //     // (error) => {
+        //     //   console.error('Error fetching products:', error);
+        //     // }
+        //       (response: any) => {
+        //         this.products = response.products
+        //         //console.log(response);
+        //     },
+        //     (error: any) => {
+        //       console.error('Error fetching data:', error);
+        //     }
+        //   );
     
     };
     
