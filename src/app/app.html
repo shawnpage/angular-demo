@@ -1,8 +1,18 @@
 <div class="top-menu">
-
     <img class="logo" alt="logo"
          src="https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png">
+</div>
 
+<div class="category-list">
+  <label for="categories">Choose a category:</label>
+  <select id="categories" name="category_selection">
+    @for (category of categories$ | async; track category;) {
+      <category-card
+      [category]="category"
+      [index] = $index
+  />
+    }
+  </select>
 </div>
 
 <div class="products">

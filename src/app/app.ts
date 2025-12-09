@@ -9,17 +9,22 @@ import axios from 'axios';
 //import {AxiosPromise} from "axios";
 
 import { Product } from './model/product';
+import { Category } from './model/category';
+
 import { ProductCardComponent } from './product-card/product-card';
+import { CategoryCardComponent } from './category-card/category-card';
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { AsyncPipe, CommonModule } from '@angular/common';
 
 const PRODUCT_URL: string = 'https://dummyjson.com/products';
+const CATEGORY_URL: string = 'https://dummyjson.com/products/categories';
 
 @Component({
   selector: 'app-root',
-  imports: [ProductCardComponent, AsyncPipe, CommonModule],
+  imports: [CategoryCardComponent, ProductCardComponent, AsyncPipe, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   standalone: true
@@ -28,13 +33,29 @@ export class AppComponent implements OnInit {
 
     protected readonly title = signal('myapp');
 
+    categories$ : Observable<Category[]> = new Observable<Category[]>;
+
     products$ : Observable<Product[]> = new Observable<Product[]>; // = this.getProducts();
 
-    products: Product[] = [];
+    // products: Product[] = [];
+    // categories: Category[] = [];
 
     constructor( private http: HttpClient ) {
       // this.products = this.products;
     }
+
+
+// TODO: use observer args
+// observable.subscribe({
+//   next: value => console.log(value),
+//   error: error => console.error(error),
+//   complete: () => console.log('Complete')
+// });
+
+    getCategories(): Observable<Category[]> {
+        return this.categories$ = this.http.get<Category[]>(CATEGORY_URL);
+    }
+
 
     getProducts(): Observable<Product[]> {
       return this.http.get<{ products: Product[] }>(PRODUCT_URL).pipe(
@@ -72,6 +93,8 @@ export class AppComponent implements OnInit {
 
       // this.products = 
       this.products$ = this.getProducts();
+      this.categories$ = this.getCategories();
+
 
 
       //this.http.get<Product[]>(`${PRODUCT_URL}`, {params});

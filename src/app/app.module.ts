@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductCardComponent } from './product-card/product-card';
+import { CategoryCardComponent } from './category-card/category-card';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ProductCardComponent } from './product-card/product-card';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        ProductCardComponent
+        ProductCardComponent,
+        CategoryCardComponent,
     ],
   providers: [],
   //bootstrap: [AppComponent]
